@@ -1,5 +1,7 @@
 import process from "node:process";
-const express = require('express');
+import express from "express";
+import axios from "axios";
+
 const router = express.Router();
 
 /**
@@ -23,8 +25,6 @@ router.get('/', (req, res) => {
  */
 router.get('/nvidia', async (req, res) => {
   try {
-    const axios = require('axios');
-
     const response = await axios.post(
       'https://integrate.api.nvidia.com/v1/chat/completions',
       {
@@ -49,13 +49,13 @@ router.get('/nvidia', async (req, res) => {
       timestamp: new Date().toISOString()
     });
 
-  } catch (_error) {
+  } catch (error) {
     return res.status(503).json({
       success: false,
       service: 'NVIDIA API',
       status: 'unreachable',
       message: '🔴 API de NVIDIA no accesible',
-      error: process.env.NODE_ENV === 'development' ? _error.message : undefined,
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
       timestamp: new Date().toISOString()
     });
   }
@@ -77,7 +77,6 @@ router.get('/full', async (req, res) => {
 
   // Verificar NVIDIA API
   try {
-    const axios = require('axios');
     await axios.post(
       'https://integrate.api.nvidia.com/v1/chat/completions',
       {
@@ -94,7 +93,7 @@ router.get('/full', async (req, res) => {
       }
     );
     checks.nvidia = { status: 'healthy', message: '🟢 API NVIDIA accesible' };
-  } catch (_error) {
+  } catch (error) {
     checks.nvidia = { status: 'error', message: '🔴 API NVIDIA no accesible' };
   }
 
@@ -109,4 +108,4 @@ router.get('/full', async (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;
