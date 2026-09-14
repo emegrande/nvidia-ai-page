@@ -1,3 +1,4 @@
+import process from "node:process";
 const express = require('express');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
