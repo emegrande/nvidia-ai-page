@@ -1,0 +1,422 @@
+````markdown name=public/index.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVIDIA AI Models - Tu API de IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+        
+        .container {
+            background: #0a0a0a;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #1a1a2e;
+        }
+        
+        h1 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.3));
+        }
+        
+        .subtitle {
+            color: #888;
+            margin-top: 5px;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ff88;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #1a1a2e;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+            background: #1a1a2e;
+            color: #ffffff;
+        }
+        
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder,
+        textarea::placeholder {
+            color: #666;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 10px rgba(0, 255, 136, 0.1);
+            background: #0f1f1f;
+        }
+        
+        select {
+            cursor: pointer;
+            background: #1a1a2e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ff88' d='M6 9L1 4h10z'/%3E%3C/svg%3E") no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+            appearance: none;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+        
+        button:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.6), 0 0 40px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        button:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        .response {
+            margin-top: 30px;
+            padding: 20px;
+            background: #1a1a2e;
+            border-radius: 8px;
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+        
+        .response::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .response::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 10px;
+        }
+        
+        .response::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 10px;
+        }
+        
+        .response::-webkit-scrollbar-thumb:hover {
+            background: #00d4ff;
+        }
+        
+        .response.active {
+            display: block;
+        }
+        
+        .response h3 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+        
+        .response p {
+            color: #ccc;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #00ff88;
+            font-weight: 600;
+        }
+        
+        .spinner {
+            border: 4px solid #1a1a2e;
+            border-top: 4px solid #00ff88;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: #ff1744;
+            margin-top: 10px;
+            padding: 12px;
+            background: #2a0a0a;
+            border-radius: 5px;
+            display: none;
+            border-left: 4px solid #ff1744;
+            box-shadow: 0 0 15px rgba(255, 23, 68, 0.2);
+        }
+        
+        .error.active {
+            display: block;
+        }
+        
+        .info {
+            color: #00d4ff;
+            margin-top: 10px;
+            padding: 12px;
+            background: #0a1a2e;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border-left: 4px solid #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+        
+        .info a {
+            color: #00ff88;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .info a:hover {
+            color: #00d4ff;
+            text-decoration: underline;
+        }
+        
+        /* Animación de entrada */
+        .container {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Efecto de glow en inputs */
+        input[type="text"]::selection,
+        input[type="password"]::selection,
+        textarea::selection {
+            background: #00ff88;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>🚀 NVIDIA AI</h1>
+            <p class="subtitle">Acceso a Modelos de IA Avanzados</p>
+        </div>
+        
+        <form id="aiForm">
+            <div class="form-group">
+                <label for="apiKey">API Key de NVIDIA:</label>
+                <input 
+                    type="password" 
+                    id="apiKey" 
+                    placeholder="nvapi-xxxxxxxxxxxxx"
+                    required
+                >
+                <div class="info">
+                    Obtén tu clave en <a href="https://build.nvidia.com/settings/api-keys" target="_blank">build.nvidia.com</a>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="model">Selecciona un Modelo:</label>
+                <select id="model" required>
+                    <option value="">-- Selecciona un modelo --</option>
+                    <option value="meta/llama-2-7b-chat">Llama 2 7B Chat</option>
+                    <option value="mistralai/mistral-7b-instruct-v0.1">Mistral 7B Instruct</option>
+                    <option value="google/flan-t5-xl">Flan T5 XL</option>
+                    <option value="openai/gpt-3.5-turbo">GPT 3.5 Turbo</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="prompt">Tu Pregunta o Prompt:</label>
+                <textarea 
+                    id="prompt" 
+                    placeholder="Escribe aquí tu pregunta o instrucción..."
+                    required
+                ></textarea>
+            </div>
+            
+            <button type="submit" id="submitBtn">► Enviar a NVIDIA API</button>
+            
+            <div class="error" id="error"></div>
+        </form>
+        
+        <div class="response" id="response">
+            <h3>⚡ Respuesta:</h3>
+            <div id="responseContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('aiForm');
+        const responseDiv = document.getElementById('response');
+        const responseContent = document.getElementById('responseContent');
+        const errorDiv = document.getElementById('error');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        const API_URL = 'http://localhost:3000/api';
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const apiKey = document.getElementById('apiKey').value;
+            const model = document.getElementById('model').value;
+            const prompt = document.getElementById('prompt').value;
+            
+            if (!apiKey || !model || !prompt) {
+                errorDiv.textContent = '❌ Por favor completa todos los campos';
+                errorDiv.classList.add('active');
+                return;
+            }
+            
+            errorDiv.classList.remove('active');
+            responseDiv.classList.remove('active');
+            submitBtn.disabled = true;
+            
+            // Mostrar loading
+            responseContent.innerHTML = '<div class="loading"><div class="spinner"></div><p>Procesando tu solicitud...</p></div>';
+            responseDiv.classList.add('active');
+            
+            try {
+                const response = await fetch(`${API_URL}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: prompt,
+                        model: model,
+                        apiKey: apiKey,
+                        temperature: 0.7,
+                        maxTokens: 1024
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Error en la solicitud');
+                }
+                
+                if (data.success && data.message) {
+                    responseContent.innerHTML = `<p>${escapeHtml(data.message)}</p>`;
+                } else {
+                    throw new Error('Respuesta inesperada del servidor');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                errorDiv.textContent = `❌ Error: ${error.message}`;
+                errorDiv.classList.add('active');
+                responseDiv.classList.remove('active');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Función para escapar HTML
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>
+````
