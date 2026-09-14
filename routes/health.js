@@ -1,3 +1,4 @@
+import process from "node:process";
 const express = require('express');
 const router = express.Router();
 
@@ -48,13 +49,13 @@ router.get('/nvidia', async (req, res) => {
       timestamp: new Date().toISOString()
     });
 
-  } catch (error) {
+  } catch (_error) {
     return res.status(503).json({
       success: false,
       service: 'NVIDIA API',
       status: 'unreachable',
       message: '🔴 API de NVIDIA no accesible',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      error: process.env.NODE_ENV === 'development' ? _error.message : undefined,
       timestamp: new Date().toISOString()
     });
   }
@@ -93,7 +94,7 @@ router.get('/full', async (req, res) => {
       }
     );
     checks.nvidia = { status: 'healthy', message: '🟢 API NVIDIA accesible' };
-  } catch (error) {
+  } catch (_error) {
     checks.nvidia = { status: 'error', message: '🔴 API NVIDIA no accesible' };
   }
 
